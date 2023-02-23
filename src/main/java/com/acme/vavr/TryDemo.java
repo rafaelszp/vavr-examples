@@ -25,6 +25,11 @@ public class TryDemo {
 
         var simple = Try.of(TryDemo::mightFail).getOrElse(-1);
         System.out.println(simple);
+
+        var result = willFail().getOrElseGet((l)->new Result(l.getMessage()));
+        System.out.println("result = " + result.error);
+
+
     }
 
     public static Integer mightFail(){
@@ -35,6 +40,23 @@ public class TryDemo {
            throw new RuntimeException("Only odd numbers allowed");
         }
         return Integer.valueOf(result);
+    }
+
+    public static Try<Result> willFail(){
+        return Try.failure(new RuntimeException("Failed on purpose"));
+    }
+
+    public static class Result{
+        public Integer value;
+        public String error;
+
+        public Result(Integer value) {
+            this.value = value;
+        }
+
+        public Result(String error) {
+            this.error = error;
+        }
     }
 
 }

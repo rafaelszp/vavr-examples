@@ -19,7 +19,6 @@ public class FutureDemo {
 
     var fu1 = Future.ofSupplier(() -> now.apply(null));
     System.out.println("fu1 = " + fu1.get());
-    fu1.await();
 
     Function1<Void, String> nowStr = sequenceExample(now);
     futureReduce(nowStr);
@@ -34,7 +33,7 @@ public class FutureDemo {
   private static void lazySequencesWithDelay() {
 
     Function1<Void,Integer> delayedRetrieve = v -> {
-      var delay = new Random().nextInt(5000);
+      var delay = new Random().nextInt(2000);
       try {
         Thread.sleep(delay);
       } catch (InterruptedException e) {
@@ -55,7 +54,7 @@ public class FutureDemo {
     );
 
     var f = Future.reduce(list,(a,b)->a+","+b);
-    System.out.println("async reduce with delay = " + f.get());
+    System.out.println("async reduce with delay = " + f.get() + " - Completed: "+f.isCompleted());
   }
 
   private static Function1<Void, String> sequenceExample(Function1<Void, Long> now) {
@@ -71,7 +70,6 @@ public class FutureDemo {
     var fs = Future.sequence(list);
     fs.get().forEach(System.out::println);
 
-    fs.await();
     return nowStr;
   }
 
